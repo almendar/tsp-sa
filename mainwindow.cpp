@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     draw = new Draw();
-    ui->verticalLayout_3->addWidget(draw);
+    ui->gridLayout_2->addWidget(draw);
 }
 
 MainWindow::~MainWindow()
@@ -24,5 +24,5 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-
+    this->ui->label->setText("Tralalal");
 }

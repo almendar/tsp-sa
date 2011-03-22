@@ -18,9 +18,11 @@ protected:
     void paintEvent(QPaintEvent *event);
     void mousePressEvent(QMouseEvent *);
 
+
 signals:
 
 public slots:
+
 
 
 private:
