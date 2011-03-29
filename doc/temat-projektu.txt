@@ -1,0 +1,15 @@
+Prowadzący: dr inż. Sebastian Kozłowski
+	
+Temat
+Optymalizacja czasu podróży za pomocą symulowanego wyżarzania - problem komiwojażera dla grafu niepełnego skierowanego
+	
+Opis 		Celem projektu jest implementacja oprogramowania umożliwiającego wczytanie z pliku mapy zawierającej
+szacunkowy czas podróży pomiędzy poszczególnymi miastami, a następnie znalezienie - za pomocą symulowanego wyżarzania - 
+optymalnej pod względem czasu podróży trasy przechodzącej przez wszystkie miasta i kończącej się w punkcie startowym.
+W odróżnieniu od "klasycznego" TSP, niektóre połączenia pomiędzy miastami mogą nie istnieć, a inne mogą mieć średni 
+czas przejazdu zależny od kierunku podróży. 
+
+Literatura: 
+[1] D. S. Johnson, L. A. McGeoch , "The Traveling Salesman Problem: A Case Study in Local Optimization",
+in E. H. L. Aarts, J .K. Lenstra: Local Search in Combinatorial Optimisation, John Wiley and Sons Ltd, pp. 215-310 . 
+[2] Z. Michalewicz, D. B. Fogel, Jak to rozwiązać czyli nowoczesna heurystyka, WNT, Warszawa 2006
