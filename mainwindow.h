@@ -25,6 +25,11 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Draw *draw;
+    void processFile(QString s);
+    int **dane;
+    int size;
+    void computeRoads();
+    bool *drogi;
 };
 
 #endif // MAINWINDOW_H

@@ -6,6 +6,12 @@
 #include <QMouseEvent>
 class RenderArea;
 
+class cityPosition{
+public:
+    int x;
+    int y;
+};
+
 class Draw : public QWidget
 {
     Q_OBJECT
@@ -22,11 +28,14 @@ protected:
 signals:
 
 public slots:
-
-
+    void paintCities(int number);
+    void paintRoads(bool *drogi);
 
 private:
     QRect qr;
+    cityPosition *cities;
+    bool *drogi;
+    int citiesCount;
 };
 
 #endif // DRAW_H

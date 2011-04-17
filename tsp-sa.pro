@@ -18,3 +18,6 @@ HEADERS  += mainwindow.h \
     draw.h
 
 FORMS    += mainwindow.ui
+
+OTHER_FILES += \
+    input1.txt
