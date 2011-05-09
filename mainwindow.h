@@ -19,6 +19,7 @@ public:
 
 
 private slots:
+    void on_pushButton_3_clicked();
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
 
@@ -26,10 +27,13 @@ private:
     Ui::MainWindow *ui;
     Draw *draw;
     void processFile(QString s);
-    int **dane;
-    int size;
+    void processFileWithCoordinates(QString s);
+    int **distances;
+    int citiesCount;
     void computeRoads();
-    bool *drogi;
+    struct roadPart *roads;
+    int roadsCount;
+    struct cityPosition *cityPositions;
 };
 
 #endif // MAINWINDOW_H

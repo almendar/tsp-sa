@@ -12,6 +12,11 @@ public:
     int y;
 };
 
+struct roadPart{
+    int a;
+    int b;
+};
+
 class Draw : public QWidget
 {
     Q_OBJECT
@@ -28,13 +33,14 @@ protected:
 signals:
 
 public slots:
-    void paintCities(int number);
-    void paintRoads(bool *drogi);
+    void paintCities(int number,struct cityPosition *wsp);
+    void paintRoads(struct roadPart *drogi, int liczbaDrog);
 
 private:
     QRect qr;
     cityPosition *cities;
-    bool *drogi;
+    struct roadPart *roads;
+    int roadsCount;
     int citiesCount;
 };
 
