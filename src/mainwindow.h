@@ -31,9 +31,9 @@ private:
     int **distances;
     int citiesCount;
     void computeRoads();
-    struct roadPart *roads;
+    struct Road *roads;
     int roadsCount;
-    struct cityPosition *cityPositions;
+    struct CityPosition *cityPositions;
 };
 
 #endif // MAINWINDOW_H

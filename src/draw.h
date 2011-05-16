@@ -4,18 +4,10 @@
 #include <QWidget>
 #include <QPainter>
 #include <QMouseEvent>
+#include "src/dataRepresentation/map.h"
 class RenderArea;
 
-class cityPosition{
-public:
-    int x;
-    int y;
-};
 
-struct roadPart{
-    int a;
-    int b;
-};
 
 class Draw : public QWidget
 {
