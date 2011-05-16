@@ -10,14 +10,18 @@ TARGET = tsp-sa
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    draw.cpp
+SOURCES += src/mainwindow.cpp \
+    src/main.cpp \
+    src/draw.cpp
 
-HEADERS  += mainwindow.h \
-    draw.h
+HEADERS  += src/mainwindow.h \
+    src/draw.h
 
-FORMS    += mainwindow.ui
+FORMS    += ui/mainwindow.ui \
+    ui/draw.ui
 
-OTHER_FILES += \
-    input1.txt
+OTHER_FILES += test_data/input1wsp4dobre.txt \
+    test_data/input1wsp3zle.txt \
+    test_data/input1wsp2zle.txt \
+    test_data/input1wsp.txt \
+    test_data/input1.txt
