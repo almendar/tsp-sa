@@ -12,10 +12,14 @@ TEMPLATE = app
 
 SOURCES += src/mainwindow.cpp \
     src/main.cpp \
-    src/draw.cpp
+    src/draw.cpp \
+    src/dataRepresentation/datareader.cpp \
+    src/dataRepresentation/map.cpp
 
 HEADERS  += src/mainwindow.h \
-    src/draw.h
+    src/draw.h \
+    src/dataRepresentation/datareader.h \
+    src/dataRepresentation/map.h
 
 FORMS    += ui/mainwindow.ui \
     ui/draw.ui
