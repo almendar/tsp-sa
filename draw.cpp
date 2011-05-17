@@ -44,10 +44,10 @@ Draw::~Draw()
 {
 }
 
-void Draw::paintCities(int number, struct cityPosition *wsp){
+void Draw::paintCities(int number, struct CityPosition *wsp){
     if(cities!=NULL)
         delete [] cities;
-    cities = new cityPosition[number];
+    cities = new CityPosition[number];
     citiesCount = number;
     if(wsp==NULL){
         for(int i=0;i<number;i++){
@@ -63,7 +63,7 @@ void Draw::paintCities(int number, struct cityPosition *wsp){
     emit repaint();
 }
 
-void Draw::paintRoads(struct roadPart *drogi, int liczbaDrog){
+void Draw::paintRoads(struct RoadPart *drogi, int liczbaDrog){
     this->roads = drogi;
     this->roadsCount = liczbaDrog;
     emit repaint();

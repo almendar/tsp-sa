@@ -4,6 +4,7 @@
 #include <iostream>
 #include <QMainWindow>
 #include "draw.h"
+#include "inputread.h"
 namespace Ui {
     class MainWindow;
     class Draw;
@@ -28,12 +29,13 @@ private:
     Draw *draw;
     void processFile(QString s);
     void processFileWithCoordinates(QString s);
-    int **distances;
-    int citiesCount;
+    int **mDistances;
+    int mCitiesCount;
     void computeRoads();
-    struct roadPart *roads;
-    int roadsCount;
-    struct cityPosition *cityPositions;
+    struct RoadPart *mRoads;
+    int mRoadsCount;
+    struct CityPosition *mCityPositions;
+    InputReader mDataReader;
 };
 
 #endif // MAINWINDOW_H

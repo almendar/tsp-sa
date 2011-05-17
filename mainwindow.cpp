@@ -10,11 +10,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     draw = new Draw();
     ui->gridLayout_2->addWidget(draw);
-    distances = NULL;
-    citiesCount = 0;
-    roads = NULL;
-    roadsCount = 0;
-    cityPositions = NULL;
+    mDistances = NULL;
+    mCitiesCount = 0;
+    mRoads = NULL;
+    mRoadsCount = 0;
+    mCityPositions = NULL;
 }
 
 MainWindow::~MainWindow()
@@ -43,14 +43,14 @@ void MainWindow::on_pushButton_2_clicked()
 //    msgBox.setText(text);
 //    msgBox.exec();
 
-    draw->paintCities(citiesCount,cityPositions);
+    draw->paintCities(mCitiesCount,mCityPositions);
     computeRoads();
 //    QMessageBox msgBox;
 //    QString text = "Dane:\n";
 //    text+=QString::number(liczbaDrog);
 //    msgBox.setText(text);
 //    msgBox.exec();
-    draw->paintRoads(roads,roadsCount);
+    draw->paintRoads(mRoads,mRoadsCount);
 }
 
 void MainWindow::computeRoads(){
@@ -68,11 +68,11 @@ void MainWindow::computeRoads(){
 //    msgBox.exec();
 
     // zmienne
-    struct roadPart *temp = new struct roadPart[citiesCount*citiesCount];
+    struct RoadPart *temp = new struct RoadPart[mCitiesCount*mCitiesCount];
     int realSize = 0;
-    bool visited[citiesCount];
-    for(int i=0;i<citiesCount;i++) visited[i]=false;
-    int remained = citiesCount;
+    bool visited[mCitiesCount];
+    for(int i=0;i<mCitiesCount;i++) visited[i]=false;
+    int remained = mCitiesCount;
     int last;
 
     // inicjalizacja
@@ -82,7 +82,7 @@ void MainWindow::computeRoads(){
     // start
     while(remained>0){
         int minCity = start;
-        for(int i=0;i<citiesCount;i++){
+        for(int i=0;i<mCitiesCount;i++){
             if(minCity!=i && i!=last)
 //                if(dane[start][i]<dane[start][minCity])
                     if(!visited[i]){
@@ -108,69 +108,17 @@ void MainWindow::computeRoads(){
 //            msgBox.setText(text);
 //            msgBox.exec();
     }
-    roads = new struct roadPart[realSize];
+    mRoads = new struct RoadPart[realSize];
     for(int i=0;i<realSize;i++){
-        roads[i]=temp[i];
+        mRoads[i]=temp[i];
     }
-    roadsCount = realSize;
+    mRoadsCount = realSize;
 }
 
 void MainWindow::processFile(QString s){
-    QMessageBox msgBox;
-    QFile file(s);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        msgBox.setText("Blad podczas otwierania pliku!");
-        msgBox.exec();
-        return;
-    }
-    int rozmiar;
-    int** tab;
-    int iter=0;
-    if(!file.atEnd()){
-        QByteArray line = file.readLine();
-        QList<QByteArray> lista = line.split(' ');
-        rozmiar = lista.size();
-//        msgBox.setText("Ilosc pol: "+QString::number(rozmiar));
-//        msgBox.exec();
-        tab=new int *[rozmiar];
-        for(int i=0;i<rozmiar;i++)
-            tab[i]=new int[rozmiar];
-        for(int i=0;i<rozmiar;i++)
-            tab[iter][i]=(lista[i].trimmed()).toInt();
-        iter++;
-    }
-    while (!file.atEnd()) {
-        QByteArray line = file.readLine();
-        QList<QByteArray> lista = line.split(' ');
-        for(int i=0;i<rozmiar;i++)
-            tab[iter][i]=(lista[i].trimmed()).toInt();
-        iter++;
-//        msgBox.setText(line);
-//        msgBox.exec();
-    }
-    if(iter==rozmiar){
-//        msgBox.setText("Wczytano plik");
-//        msgBox.exec();
-        if(distances!=NULL){
-            for(int i=0;i<citiesCount;i++)
-                delete [] distances[i];
-            delete [] distances;
-        }
-        distances = tab;
-        citiesCount = rozmiar;
-//        QString text = "Dane:\n";
-//        for(int i=0;i<rozmiar;i++){
-//            for(int j=0;j<rozmiar;j++)
-//                text+=QString::number(tab[i][j]);
-//            text+="\n";
-//        }
-//        msgBox.setText(text);
-//        msgBox.exec();
-    }
-    else{
-        msgBox.setText("Blad podczas wczytywania pliku\nIlosc wierszy nierowna ilosci kolumn");
-        msgBox.exec();
-    }
+    mDataReader.processFileWithCitiesDistances(s);
+    mDistances = mDataReader.getDistanceMatrix();
+    mCitiesCount = mDataReader.getCityCount();
 }
 
 void MainWindow::on_pushButton_3_clicked()
@@ -181,47 +129,8 @@ void MainWindow::on_pushButton_3_clicked()
 }
 
 void MainWindow::processFileWithCoordinates(QString s){
-    QMessageBox msgBox;
-    QFile file(s);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        msgBox.setText("Blad podczas otwierania pliku!");
-        msgBox.exec();
-        return;
-    }
-    struct cityPosition *temp;
-    temp = new cityPosition[citiesCount];
-
-    int i = 0;
-    bool error = false;
-    while (!file.atEnd() && !error) {
-        QByteArray line = file.readLine();
-        QList<QByteArray> lista = line.split(' ');
-        if(lista.size()==2){
-            temp[i].x = (lista[0].trimmed()).toInt();
-            temp[i].y = (lista[1].trimmed()).toInt();
-            i++;
-        }else{
-            error = true;
-        }
-        if(i>citiesCount){
-            error = true;
-        }
-    }
-    if(i<citiesCount)
-        error = true;
-    if(error){
-        if(i>=citiesCount){
-            // wiêcej danych ni¿ trzeba, czy tak zostawiæ? // Narazie zawsze tak, ominiecie obslugi
-            msgBox.setText("Blad podczas wczytywania pliku\nIlosc wierszy wieksza niz ilosc miast\nCzy wczytac jedynie wymagana czesc danych?");
-            msgBox.exec();
-            // dodac obsluge Tak/Nie
-        }else{
-            // za ma³o danych, albo z³e dane
-            msgBox.setText("Blad podczas wczytywania pliku\nIlosc wierszy mniejsza niz ilosc miast lub bledne dane");
-            msgBox.exec();
-        }
-        return;
-    }
-    cityPositions = temp;
-    draw->paintCities(citiesCount,cityPositions);
+    mDataReader.processFileWithCitiesCoordinates(s);
+    mCityPositions = mDataReader.getCitiesPositions();
+    mCitiesCount = mDataReader.getCityCount();
+    draw->paintCities(mCitiesCount,mCityPositions);
 }

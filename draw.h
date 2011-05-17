@@ -4,18 +4,10 @@
 #include <QWidget>
 #include <QPainter>
 #include <QMouseEvent>
+#include "inputread.h"
 class RenderArea;
 
-class cityPosition{
-public:
-    int x;
-    int y;
-};
 
-struct roadPart{
-    int a;
-    int b;
-};
 
 class Draw : public QWidget
 {
@@ -33,13 +25,13 @@ protected:
 signals:
 
 public slots:
-    void paintCities(int number,struct cityPosition *wsp);
-    void paintRoads(struct roadPart *drogi, int liczbaDrog);
+    void paintCities(int number,struct CityPosition *wsp);
+    void paintRoads(struct RoadPart *drogi, int liczbaDrog);
 
 private:
     QRect qr;
-    cityPosition *cities;
-    struct roadPart *roads;
+    CityPosition *cities;
+    struct RoadPart *roads;
     int roadsCount;
     int citiesCount;
 };

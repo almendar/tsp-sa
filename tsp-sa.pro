@@ -12,10 +12,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    draw.cpp
+    draw.cpp \
+    inputread.cpp
 
 HEADERS  += mainwindow.h \
-    draw.h
+    draw.h \
+    inputread.h
 
 FORMS    += mainwindow.ui
 
