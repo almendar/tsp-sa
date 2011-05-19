@@ -3,6 +3,7 @@
 #include <QString>
 #include <QFile>
 #include <QIODevice>
+#include <QVector>
 class CityPosition{
 public:
     int x;
@@ -20,17 +21,17 @@ public:
     InputReader();
     void processFileWithCitiesDistances(QString fileName);
     void processFileWithCitiesCoordinates(QString fileName);
-    int** getDistanceMatrix() { return mDistanceMatrix;};
+    QVector<QVector<int> >& getDistanceMatrix() { return mDistanceMatrix;};
     int getCityCount() {return mCityCountInRow;};
-    CityPosition* getCitiesPositions() {return mCitiesCoordinates;};
+    QVector<CityPosition> getCitiesPositions() {return mCitiesCoordinates;};
 
 private:
     //Variables
     bool mIsDistanceMatrixCreated;
     int mCityCountInRow;
     int mCityCountInColumn;
-    int** mDistanceMatrix;
-    CityPosition* mCitiesCoordinates;
+    QVector<QVector<int> > mDistanceMatrix;
+    QVector<CityPosition> mCitiesCoordinates;
 
     //Methods
     void initializeDistanceMatrix();

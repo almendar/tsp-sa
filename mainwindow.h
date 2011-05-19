@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <QMainWindow>
+#include <QVector>
 #include "draw.h"
 #include "inputread.h"
 namespace Ui {
@@ -29,12 +30,12 @@ private:
     Draw *draw;
     void processFile(QString s);
     void processFileWithCoordinates(QString s);
-    int **mDistances;
+    QVector<QVector<int> > mDistances;
     int mCitiesCount;
     void computeRoads();
     struct RoadPart *mRoads;
     int mRoadsCount;
-    struct CityPosition *mCityPositions;
+    QVector<CityPosition> mCityPositions;
     InputReader mDataReader;
 };
 

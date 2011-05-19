@@ -10,11 +10,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     draw = new Draw();
     ui->gridLayout_2->addWidget(draw);
-    mDistances = NULL;
+//    mDistances = NULL;
     mCitiesCount = 0;
     mRoads = NULL;
     mRoadsCount = 0;
-    mCityPositions = NULL;
+//    mCityPositions = NULL;
 }
 
 MainWindow::~MainWindow()

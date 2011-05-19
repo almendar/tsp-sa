@@ -7,9 +7,10 @@ InputReader::InputReader() : mIsDistanceMatrixCreated(false), mDistanceMatrix(0)
 
 
 void InputReader::initializeDistanceMatrix() {
-    mDistanceMatrix=new int*[mCityCountInRow];
+    mDistanceMatrix.resize(mCityCountInRow);
     for(int i=0;i<mCityCountInRow;i++)
-        mDistanceMatrix[i]=new int[mCityCountInRow];
+        mDistanceMatrix[i].resize(mCityCountInRow);
+    mIsDistanceMatrixCreated = true;
 }
 
 void InputReader::processFileWithCitiesCoordinates(QString fileName)
@@ -20,7 +21,7 @@ void InputReader::processFileWithCitiesCoordinates(QString fileName)
         return;
     }
 
-    mCitiesCoordinates = new CityPosition[mCityCountInColumn];
+    mCitiesCoordinates.resize(mCityCountInColumn);
 
     int i = 0;
     while (!file.atEnd()) {
@@ -46,12 +47,12 @@ void InputReader::processFileWithCitiesCoordinates(QString fileName)
 
 void InputReader::validateDistanceMatrix() {
     if(this->mCityCountInColumn != this->mCityCountInRow) {
-        //throw an exception
+        throw -1;
     }
 
     for(int i=0 ; i < mCityCountInRow ; i++) {
         if(mDistanceMatrix[i][i] != 0) {
-            //throw an exception
+            throw -1;
         }
     }
 }
@@ -60,20 +61,20 @@ void InputReader::processFileWithCitiesDistances(QString fileName) {
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
         //File could not be successuflly opened. Need to report an bug
-        return;
+        throw "File could not be opened!";
     }
     mCityCountInColumn = 0;
     while(!file.atEnd()){
         QByteArray line = file.readLine();
         QList<QByteArray> singleRow = line.split(' ');
-        if(mDistanceMatrix == 0) {
+        if(mDistanceMatrix.isEmpty()) {
             mCityCountInRow = singleRow.size();
             initializeDistanceMatrix();
         }
         else {
             //check if cityCount is the same
             if(mCityCountInRow != singleRow.size()) {
-                //Throw an exception
+                throw -1;
             }
         }
         for(int i=0;i<mCityCountInRow;i++)
