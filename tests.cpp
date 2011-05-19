@@ -45,7 +45,6 @@ int generatingInitialRouteTest() {
         for(int k=0;k<rut[i].size();k++){
             qDebug() << rut[i][k];
         }
-        qDebug() << "\n";
     }
     delete solver;
     return 0;

@@ -13,9 +13,9 @@ int startGUI(int argc, char* argv[]) {
 
 int main(int argc, char *argv[])
 {
-    //return startGUI(argc,argv);
+    return startGUI(argc,argv);
     //return inputReadTest();
-    return generatingInitialRouteTest();
+   // return generatingInitialRouteTest();
 }
 
 
