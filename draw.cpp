@@ -1,15 +1,17 @@
 #include "draw.h"
 
 Draw::Draw(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),mXMax(INT_MIN),mYMax(INT_MIN)
 {
-    //this->setMinimumSize(200,400);
+    this->setMinimumSize(200,400);
     QSizePolicy size_policy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     this->setSizePolicy(size_policy);
     this->qr.setRect(1,1,30,46);
     cities = NULL;
     citiesCount = 0;
     roads = NULL;
+
+
 }
 
 void Draw::paintEvent(QPaintEvent *event)
@@ -18,53 +20,53 @@ void Draw::paintEvent(QPaintEvent *event)
     int height = size().height();
     int width = size().width();
     qp.drawRect(1,1,width-3,height-3);
-//    qp.drawRect(this->qr);
-    for(int i=0;i<citiesCount;i++){
-//        qp.drawPoint(cities[i].x,cities[i].y);
-        qp.drawRect(cities[i].x,cities[i].y,3,3);
-        qp.drawText(cities[i].x-8,cities[i].y-5,30,20,0,QString::number(i+1));
-    }
-    if(roads!=NULL)
-        for(int i=0;i<roadsCount;i++){
-            int mA=roads[i].a;
-            int mB=roads[i].b;
-            qp.drawLine(cities[mA].x,cities[mA].y,cities[mB].x,cities[mB].y);
-        }
+    paintCities();
 }
 
-void Draw::mousePressEvent(QMouseEvent *event)
-{
-    const int x = event->x();
-    const int y = event->y();
-    this->qr.setRect(1,1,x,y);
-    emit repaint();
+
+void Draw::paintCities() {
+    QPainter qp(this);
+    int height = size().height();
+    int width = size().width();
+
+    if(!mCityPositions.isEmpty()) {
+        for(int i=0; i < mCityPositions.size(); i++) {
+            double x = mCityPositions[i].x;
+            double y = mCityPositions[i].y;
+            int xScaled = (int)((x/(mXMax+8))*width);
+            int yScaled = (int)((y/(mYMax+8))*height);
+            mScaledCityPositions[i].x = xScaled;
+            mScaledCityPositions[i].x = yScaled;
+            qp.drawRect(xScaled,yScaled,3,3);
+            qp.drawText(xScaled-8,yScaled-8,30,20,0,QString::number(i+1));
+        }
+    }
+}
+
+void Draw::paintRoute() {
+    QPainter qp(this);
+    if(mRoutes.isEmpty()) {
+
+    }
 }
 
 Draw::~Draw()
 {
 }
 
-void Draw::paintCities(int number, QVector<CityPosition> wsp){
-    if(cities!=NULL)
-        delete [] cities;
-    cities = new CityPosition[number];
-    citiesCount = number;
-    if(wsp.isEmpty()){
-        for(int i=0;i<number;i++){
-            cities[i].x=rand()%size().width();
-            cities[i].y=rand()%size().height();
-        }
-    }else{
-        for(int i=0;i<number;i++){
-            cities[i].y = wsp[i].x;
-            cities[i].x = wsp[i].y;
-        }
+void Draw::setCities(QVector<CityPosition> cityPositions) {
+    mCityPositions = cityPositions;
+    mScaledCityPositions.resize(mCityPositions.size());
+    for(int i=0; i < cityPositions.size();i++) {
+        if(cityPositions[i].x > mXMax)
+            mXMax = cityPositions[i].x;
+        if(cityPositions[i].y > mYMax)
+            mYMax = cityPositions[i].y;
     }
-    emit repaint();
+    update();
 }
 
-void Draw::paintRoads(struct RoadPart *drogi, int liczbaDrog){
-    this->roads = drogi;
-    this->roadsCount = liczbaDrog;
-    emit repaint();
+void Draw::setRoute(QVector<QVector<int> > routes) {
+    mRoutes = routes;
+    update();
 }

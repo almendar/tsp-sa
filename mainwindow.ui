@@ -78,7 +78,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="btn_BrowseCityDistance">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -134,7 +134,7 @@
        </layout>
       </item>
       <item row="2" column="0">
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="btn_Compute">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -167,7 +167,7 @@
            <widget class="QLineEdit" name="lineEdit_2"/>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="btn_BrowseCityPosition">
             <property name="text">
              <string>Przeglądaj...</string>
             </property>

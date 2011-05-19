@@ -9,6 +9,7 @@ QT       += core gui
 TARGET = tsp-sa
 TEMPLATE = app
 
+CONFIG  += console
 
 SOURCES += main.cpp\
         mainwindow.cpp \
