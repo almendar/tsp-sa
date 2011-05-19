@@ -25,7 +25,7 @@ protected:
 signals:
 
 public slots:
-    void paintCities(int number,struct CityPosition *wsp);
+    void paintCities(int number,QVector<CityPosition> wsp);
     void paintRoads(struct RoadPart *drogi, int liczbaDrog);
 
 private:

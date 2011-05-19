@@ -44,12 +44,12 @@ Draw::~Draw()
 {
 }
 
-void Draw::paintCities(int number, struct CityPosition *wsp){
+void Draw::paintCities(int number, QVector<CityPosition> wsp){
     if(cities!=NULL)
         delete [] cities;
     cities = new CityPosition[number];
     citiesCount = number;
-    if(wsp==NULL){
+    if(wsp.isEmpty()){
         for(int i=0;i<number;i++){
             cities[i].x=rand()%size().width();
             cities[i].y=rand()%size().height();

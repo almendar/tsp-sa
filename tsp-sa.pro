@@ -13,11 +13,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     draw.cpp \
-    inputread.cpp
+    inputread.cpp \
+    tests.cpp \
+    tspsolver.cpp
 
 HEADERS  += mainwindow.h \
     draw.h \
-    inputread.h
+    inputread.h \
+    tspsolver.h
 
 FORMS    += mainwindow.ui
 
