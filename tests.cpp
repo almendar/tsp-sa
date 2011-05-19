@@ -4,8 +4,8 @@
 #include <QDebug>
 
 int inputReadTest() {
-    QString distanceFile("D:\\tomek\\programowanie\\qt-creator\\tsp-sa\\input1.txt");
-    QString coordinatesFile("D:\\tomek\\programowanie\\qt-creator\\tsp-sa\\input1wsp4dobre.txt");
+    QString distanceFile("C:\\Users\\MatiM\\Desktop\\My Dropbox\\sem10\\GIS\\projekt\\komiwojazer\\input1.txt");
+    QString coordinatesFile("C:\\Users\\MatiM\\Desktop\\My Dropbox\\sem10\\GIS\\projekt\\komiwojazer\\input1wsp4dobre.txt");
     InputReader reader;
     reader.processFileWithCitiesDistances(distanceFile);
     reader.processFileWithCitiesCoordinates(coordinatesFile);
@@ -33,14 +33,74 @@ int inputReadTest() {
 
 
 int generatingInitialRouteTest() {
-    QString distanceFile("D:\\tomek\\programowanie\\qt-creator\\tsp-sa\\input1.txt");
-    QString coordinatesFile("D:\\tomek\\programowanie\\qt-creator\\tsp-sa\\input1wsp4dobre.txt");
+//    QString distanceFile("D:\\tomek\\programowanie\\qt-creator\\tsp-sa\\input1.txt");
+//    QString coordinatesFile("D:\\tomek\\programowanie\\qt-creator\\tsp-sa\\input1wsp4dobre.txt");
+    QString distanceFile("C:\\Users\\MatiM\\Desktop\\My Dropbox\\sem10\\GIS\\projekt\\komiwojazer\\input1.txt");
+    QString coordinatesFile("C:\\Users\\MatiM\\Desktop\\My Dropbox\\sem10\\GIS\\projekt\\komiwojazer\\input1wsp4dobre.txt");
     InputReader reader;
     reader.processFileWithCitiesDistances(distanceFile);
     reader.processFileWithCitiesCoordinates(coordinatesFile);
     TSPSolver* solver = new TSPSolver(reader.getDistanceMatrix(),reader.getCityCount(),0.4f);
     solver->generateStartingRoute();
     QVector<QVector<int> >& rut = solver->getRoute();
+    for(int i=0; i < rut.size(); i++) {
+        for(int k=0;k<rut[i].size();k++){
+            qDebug() << rut[i][k];
+        }
+        qDebug() << "\n";
+    }
+    delete solver;
+    return 0;
+}
+
+int twoOptTest(){
+    QString distanceFile("C:\\Users\\MatiM\\Desktop\\My Dropbox\\sem10\\GIS\\projekt\\komiwojazer\\input1.txt");
+    QString coordinatesFile("C:\\Users\\MatiM\\Desktop\\My Dropbox\\sem10\\GIS\\projekt\\komiwojazer\\input1wsp4dobre.txt");
+    InputReader reader;
+    reader.processFileWithCitiesDistances(distanceFile);
+    reader.processFileWithCitiesCoordinates(coordinatesFile);
+    TSPSolver* solver = new TSPSolver(reader.getDistanceMatrix(),reader.getCityCount(),0.4f);
+    solver->generateStartingRoute();
+
+    QVector<QVector<int> >& rut = solver->getRoute();
+    for(int i=0; i < rut.size(); i++) {
+        for(int k=0;k<rut[i].size();k++){
+            qDebug() << rut[i][k];
+        }
+        qDebug() << "\n";
+    }
+
+    solver->twoOpt(solver->getRoute());
+
+    for(int i=0; i < rut.size(); i++) {
+        for(int k=0;k<rut[i].size();k++){
+            qDebug() << rut[i][k];
+        }
+        qDebug() << "\n";
+    }
+    delete solver;
+    return 0;
+}
+
+int annealingTest(){
+    QString distanceFile("C:\\Users\\MatiM\\Desktop\\My Dropbox\\sem10\\GIS\\projekt\\komiwojazer\\input1.txt");
+    QString coordinatesFile("C:\\Users\\MatiM\\Desktop\\My Dropbox\\sem10\\GIS\\projekt\\komiwojazer\\input1wsp4dobre.txt");
+    InputReader reader;
+    reader.processFileWithCitiesDistances(distanceFile);
+    reader.processFileWithCitiesCoordinates(coordinatesFile);
+    TSPSolver* solver = new TSPSolver(reader.getDistanceMatrix(),reader.getCityCount(),0.4f);
+    solver->generateStartingRoute();
+
+    QVector<QVector<int> >& rut = solver->getRoute();
+    for(int i=0; i < rut.size(); i++) {
+        for(int k=0;k<rut[i].size();k++){
+            qDebug() << rut[i][k];
+        }
+        qDebug() << "\n";
+    }
+
+    solver->startSimulatedAnnealing();
+
     for(int i=0; i < rut.size(); i++) {
         for(int k=0;k<rut[i].size();k++){
             qDebug() << rut[i][k];

@@ -1,4 +1,5 @@
 #include "tspsolver.h"
+#include <QtCore/qmath.h>
 
 TSPSolver::TSPSolver(QVector<QVector<int> >& adjacencyMatrix,
                      int nrOfCities, float initTemperature):
@@ -185,3 +186,94 @@ void TSPSolver::findWayBackToStart(int startOfTheRoute, int lastVisitedNode) {
         }
     }
 }
+
+QVector< QVector<int> > TSPSolver::twoOpt(QVector< QVector<int> > route){
+    int segmentsCount = 0;
+    for(int i=0; i<route.size(); i++)
+        segmentsCount += route[i].size();
+
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
+    int firstSegment = (qrand() % segmentsCount);
+    int secondSegment = (qrand() % (segmentsCount-1));
+    if(secondSegment >= firstSegment)
+        secondSegment++;
+
+    int x1=0, x2=0, y1=0, y2=0;
+    int fS = firstSegment, sS = secondSegment;
+    bool ready1 = false, ready2=false;
+    int i=0;
+    while(!ready1 || !ready2){
+        if(!ready1){
+            if(route[i].size() <= fS){
+                fS -= route[i].size();
+                x1++;
+            }else{
+                y1=fS;
+                ready1 = true;
+            }
+        }
+        if(!ready2){
+            if(route[i].size() <= sS){
+                sS -= route[i].size();
+                x2++;
+            }else{
+                y2=sS;
+                ready2 = true;
+            }
+        }
+        i++;
+    }
+
+    int temp = route[x2][y2];
+    route[x2][y2]=route[x1][y1];
+    route[x1][y1]=temp;
+
+    return route;
+}
+
+void TSPSolver::startSimulatedAnnealing(){
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
+
+    QVector< QVector<int> > bestRoute = mRoute;
+    QVector< QVector<int> > actualRoute = mRoute;
+    int bestLength = routeLength(mAdjacencyMatrix, mRoute);
+    int actualLength = routeLength(mAdjacencyMatrix, actualRoute);
+    float actualTemperature = mInitTemperature;
+    actualTemperature = 10.0;
+    while(actualTemperature>0.0){
+        QVector< QVector<int> > newRoute = twoOpt(actualRoute);
+        int newLength = routeLength(mAdjacencyMatrix, newRoute);
+        if(newLength<=actualLength){
+            actualRoute = newRoute;
+            actualLength = routeLength(mAdjacencyMatrix, actualRoute);
+            if(actualLength<bestLength){
+                bestRoute = actualRoute;
+                bestLength = routeLength(mAdjacencyMatrix, mRoute);
+            }
+        }else{
+            int rand = qrand();
+            double drand = rand/ (static_cast<double>(RAND_MAX));
+            double expw = (newLength-actualLength)*actualTemperature;
+            double exp = qExp(expw);
+            if(drand<exp){
+                actualRoute = newRoute;
+            }
+        }
+        // wys³aæ aktualn¹ trasê
+        actualTemperature-=1.0;
+    }
+    // wys³aæ najlepsz¹ trasê
+}
+
+int TSPSolver::routeLength(QVector<QVector<int> > &adjacencyMatrix, QVector< QVector<int> > &route){
+    int sum = 0;
+    for(int i=0;i<route.size();i++){
+        for(int j=0;j<route[i].size();j++){
+            sum += adjacencyMatrix[i][route[i][j]];
+        }
+    }
+    return sum;
+}
+
