@@ -5,8 +5,8 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include "inputread.h"
+#include <QDebug>
 class RenderArea;
-
 
 
 class Draw : public QWidget
@@ -19,21 +19,28 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event);
-    void mousePressEvent(QMouseEvent *);
 
 
 signals:
 
 public slots:
-    void paintCities(int number,QVector<CityPosition> wsp);
-    void paintRoads(struct RoadPart *drogi, int liczbaDrog);
+    void setCities(QVector<CityPosition> cityPositions);
+    void setRoute(QVector<QVector<int> > routes);
+
 
 private:
     QRect qr;
     CityPosition *cities;
     struct RoadPart *roads;
+    QVector<CityPosition> mCityPositions;
+    QVector<CityPosition> mScaledCityPositions;
+    QVector<QVector<int> > mRoutes;
     int roadsCount;
     int citiesCount;
+    int mXMax;
+    int mYMax;
+    void paintCities();
+    void paintRoute();
 };
 
 #endif // DRAW_H

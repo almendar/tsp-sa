@@ -4,8 +4,8 @@
 #include <iostream>
 #include <QMainWindow>
 #include <QVector>
-#include "draw.h"
 #include "inputread.h"
+#include "draw.h"
 namespace Ui {
     class MainWindow;
     class Draw;
@@ -19,17 +19,21 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+signals:
+    void cityPositionRead(QVector<CityPosition> cityPositions);
+
 
 private slots:
-    void on_pushButton_3_clicked();
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
+    void browseForCoordinatesFile();
+    void browseForDistanceFile();
+    void computeRoute();
 
 private:
     Ui::MainWindow *ui;
     Draw *draw;
     void processFile(QString s);
     void processFileWithCoordinates(QString s);
+    void showWarning(const char* msg);
     QVector<QVector<int> > mDistances;
     int mCitiesCount;
     void computeRoads();
@@ -37,6 +41,7 @@ private:
     int mRoadsCount;
     QVector<CityPosition> mCityPositions;
     InputReader mDataReader;
+
 };
 
 #endif // MAINWINDOW_H

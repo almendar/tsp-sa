@@ -10,11 +10,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     draw = new Draw();
     ui->gridLayout_2->addWidget(draw);
-//    mDistances = NULL;
     mCitiesCount = 0;
     mRoads = NULL;
     mRoadsCount = 0;
-//    mCityPositions = NULL;
+    connect(ui->btn_BrowseCityDistance,SIGNAL(clicked()),SLOT(browseForDistanceFile()));
+    connect(ui->btn_BrowseCityPosition,SIGNAL(clicked()),SLOT(browseForCoordinatesFile()));
+    connect(ui->btn_Compute,SIGNAL(clicked()),SLOT(computeRoute()));
+    connect(this,SIGNAL(cityPositionRead(QVector<CityPosition>)),draw,SLOT(setCities(QVector<CityPosition>)));
 }
 
 MainWindow::~MainWindow()
@@ -22,35 +24,39 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::browseForDistanceFile()
 {
     QString s = QFileDialog::getOpenFileName(this, "Wybierz plik", "wejscie.txt");
     this->ui->lineEdit->setText(s);
-    processFile(s);
+    //processFile(s);
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::computeRoute()
 {
-    this->ui->label->setText("Tralalal");
+//    this->ui->label->setText("Tralalal");
+//    draw->paintCities(mCitiesCount,mCityPositions);
+//    computeRoads();
+//    draw->paintRoads(mRoads,mRoadsCount);
+    QString distanceFile = this->ui->lineEdit->text();
+    if(!QFile::exists(distanceFile)) {
+        this->showWarning("Distance file does not exists!");
+        return;
+    }
+    QString positionFile = this->ui->lineEdit_2->text();
+    if(!QFile::exists(positionFile)) {
+        this->showWarning("Position file does not exists!");
+        return;
+    }
+    mDataReader.processFileWithCitiesDistances(distanceFile);
+    mDataReader.processFileWithCitiesCoordinates(positionFile);
+    emit cityPositionRead(mDataReader.getCitiesPositions());
+}
 
-//    QString text = "Dane:\n";
-//    QMessageBox msgBox;
-//    for(int i=0;i<size;i++){
-//        for(int j=0;j<size;j++)
-//            text+=QString::number(dane[i][j]);
-//        text+="\n";
-//    }
-//    msgBox.setText(text);
-//    msgBox.exec();
-
-    draw->paintCities(mCitiesCount,mCityPositions);
-    computeRoads();
-//    QMessageBox msgBox;
-//    QString text = "Dane:\n";
-//    text+=QString::number(liczbaDrog);
-//    msgBox.setText(text);
-//    msgBox.exec();
-    draw->paintRoads(mRoads,mRoadsCount);
+void MainWindow::showWarning(const char* text){
+    QMessageBox msg(this);
+    msg.setText(text);
+    msg.setIcon(QMessageBox::Warning);
+    msg.exec();
 }
 
 void MainWindow::computeRoads(){
@@ -121,16 +127,9 @@ void MainWindow::processFile(QString s){
     mCitiesCount = mDataReader.getCityCount();
 }
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::browseForCoordinatesFile()
 {
     QString s = QFileDialog::getOpenFileName(this, "Wybierz plik wspó³rzêdnych", "wspolrzedne.txt");
     this->ui->lineEdit_2->setText(s);
-    processFileWithCoordinates(s);
-}
-
-void MainWindow::processFileWithCoordinates(QString s){
-    mDataReader.processFileWithCitiesCoordinates(s);
-    mCityPositions = mDataReader.getCitiesPositions();
-    mCitiesCount = mDataReader.getCityCount();
-    draw->paintCities(mCitiesCount,mCityPositions);
+    //processFileWithCoordinates(s);
 }
