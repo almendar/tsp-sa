@@ -17,8 +17,7 @@ void InputReader::processFileWithCitiesCoordinates(QString fileName)
 {
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        //throw an exception
-        return;
+        throw "File could not be opened";
     }
 
     mCitiesCoordinates.resize(mCityCountInColumn);
@@ -26,6 +25,7 @@ void InputReader::processFileWithCitiesCoordinates(QString fileName)
     int i = 0;
     while (!file.atEnd()) {
         QByteArray line = file.readLine();
+        line = line.trimmed();
         QList<QByteArray> lista = line.split(' ');
         if(lista.size()==2){
             mCitiesCoordinates[i].x = (lista[0].trimmed()).toInt();
@@ -33,26 +33,26 @@ void InputReader::processFileWithCitiesCoordinates(QString fileName)
             i++;
         }
         else{
-            //throw an exception
+            throw "Number of entries in one of the rows is not proper";
         }
         if(i>mCityCountInColumn){
-            //throw an exception, becasue list is too long
+            throw "thrown an exception, becasue list is too long";
         }
     }
     if(i<mCityCountInColumn) {
-        //throw an exception, list was too short
+        throw "thrown an exception, list was too short";
     }
 }
 
 
 void InputReader::validateDistanceMatrix() {
     if(this->mCityCountInColumn != this->mCityCountInRow) {
-        throw -1;
+        throw "Distance matrix should be a square!";
     }
 
     for(int i=0 ; i < mCityCountInRow ; i++) {
         if(mDistanceMatrix[i][i] != 0) {
-            throw -1;
+            throw "All values on diagonal must me zeroes!";
         }
     }
 }
@@ -66,6 +66,7 @@ void InputReader::processFileWithCitiesDistances(QString fileName) {
     mCityCountInColumn = 0;
     while(!file.atEnd()){
         QByteArray line = file.readLine();
+        line = line.trimmed();
         QList<QByteArray> singleRow = line.split(' ');
         if(mDistanceMatrix.isEmpty()) {
             mCityCountInRow = singleRow.size();

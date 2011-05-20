@@ -4,11 +4,13 @@
 #include <QFile>
 #include <QIODevice>
 #include <QVector>
+#include <QPoint>
 class CityPosition{
 public:
     int x;
     int y;
 };
+
 
 struct RoadPart{
     int a;
