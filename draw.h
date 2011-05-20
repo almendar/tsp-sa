@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include "inputread.h"
 #include <QDebug>
+#include <QtCore/qmath.h>
 class RenderArea;
 
 
@@ -29,12 +30,16 @@ public slots:
 
 
 private:
+
+    void drawArrowLine(QPainter& painter, QPoint& from, QPoint& to);
+
     QRect qr;
     CityPosition *cities;
     struct RoadPart *roads;
     QVector<CityPosition> mCityPositions;
     QVector<CityPosition> mScaledCityPositions;
     QVector<QVector<int> > mRoutes;
+
     int roadsCount;
     int citiesCount;
     int mXMax;

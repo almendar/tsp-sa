@@ -22,15 +22,19 @@ void TSPSolver::generateStartingRoute() {
     int notVisitedVerticesNumber = mNrOfCities;
     int currentVertexNr = startVertexNr;
     while(notVisitedVerticesNumber > 0) {
+        qDebug() << "Left cities:" <<notVisitedVerticesNumber;
         int bestNeighbour = findNearestNeighbour(currentVertexNr);
         //Check if all neighbours connected to current node were visited?
         if(bestNeighbour == -1) {
             //if there are more vertices look for them.
             if(notVisitedVerticesNumber>1) {
-                currentVertexNr = findNearestUnexploredVertex(currentVertexNr);
+                mVisitedNodes[currentVertexNr] = true;
+                int unexplored = findNearestUnexploredVertex(currentVertexNr);
+                currentVertexNr = unexplored;
                 --notVisitedVerticesNumber;
             }
-            else if(notVisitedVerticesNumber == 1 && !mVisitedNodes[currentVertexNr]) {
+            else if(notVisitedVerticesNumber == 1 //&& !mVisitedNodes[currentVertexNr]
+                    ) {
                 //current vertex is the last one.
                 --notVisitedVerticesNumber;
                 mVisitedNodes[currentVertexNr] = true;
@@ -74,12 +78,15 @@ This method changes object state.
 Based od DFS algorithm
 */
 int TSPSolver::findNearestUnexploredVertex(const int& vertexNr) {
-    bool visited[mNrOfCities];
+    QVector<bool> visited;
+    visited.resize(mNrOfCities);
     for(int i=0;i<mNrOfCities;i++) {visited[i]=false;};
-    QStack<int> neighboursToSee[mNrOfCities];
+    QVector<QStack<int> > neighboursToSee;
+    neighboursToSee.resize(mNrOfCities);
     QStack<int> route;
     int currentVertex = vertexNr;
     route.push(currentVertex);
+    bool stopSearch = false;
     while(true) {
         QVector<int>& neighboursRow = mAdjacencyMatrix[currentVertex];
         if(!visited[currentVertex]) {
@@ -87,6 +94,7 @@ int TSPSolver::findNearestUnexploredVertex(const int& vertexNr) {
                 //if we found unvisited node in TSP, we can stop searching
                 if(neighboursRow[k]>0 && !mVisitedNodes[k]) {
                     route.push(k);
+                    stopSearch = true;
                     break;
                 }
                 //add all neighbours that were not visited, and there is a connection
@@ -95,6 +103,8 @@ int TSPSolver::findNearestUnexploredVertex(const int& vertexNr) {
                 }
             }
             visited[currentVertex] = true;
+            if(stopSearch)
+                break;
         }
 
         if(!neighboursToSee[currentVertex].isEmpty()) {
@@ -105,7 +115,12 @@ int TSPSolver::findNearestUnexploredVertex(const int& vertexNr) {
         }
         else {
             //dead end, remove from the stack
+
             route.pop();
+            if(route.isEmpty()) {
+                //pass
+                int a = 3;
+            }
             //go back to previous vertex and start again
             currentVertex = route.top();
             /*this should only happen if we have already been at this

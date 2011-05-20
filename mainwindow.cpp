@@ -12,16 +12,22 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->gridLayout_2->addWidget(draw);
     mCitiesCount = 0;
     mRoads = NULL;
+    mRouteSolver = 0;
     mRoadsCount = 0;
     connect(ui->btn_BrowseCityDistance,SIGNAL(clicked()),SLOT(browseForDistanceFile()));
     connect(ui->btn_BrowseCityPosition,SIGNAL(clicked()),SLOT(browseForCoordinatesFile()));
     connect(ui->btn_Compute,SIGNAL(clicked()),SLOT(computeRoute()));
+    connect(ui->btn_LoadInputData,SIGNAL(clicked()),SLOT(loadDataFiles()));
+    connect(ui->btn_Compute,SIGNAL(clicked()),SLOT(computeRoute()));
     connect(this,SIGNAL(cityPositionRead(QVector<CityPosition>)),draw,SLOT(setCities(QVector<CityPosition>)));
+    connect(this,SIGNAL(cityRouteComput(QVector<QVector<int> >)),draw,SLOT(setRoute(QVector<QVector<int> >)));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    if(mRouteSolver != 0)
+        delete mRouteSolver;
 }
 
 void MainWindow::browseForDistanceFile()
@@ -31,12 +37,7 @@ void MainWindow::browseForDistanceFile()
     //processFile(s);
 }
 
-void MainWindow::computeRoute()
-{
-//    this->ui->label->setText("Tralalal");
-//    draw->paintCities(mCitiesCount,mCityPositions);
-//    computeRoads();
-//    draw->paintRoads(mRoads,mRoadsCount);
+void MainWindow::loadDataFiles() {
     QString distanceFile = this->ui->lineEdit->text();
     if(!QFile::exists(distanceFile)) {
         this->showWarning("Distance file does not exists!");
@@ -47,9 +48,33 @@ void MainWindow::computeRoute()
         this->showWarning("Position file does not exists!");
         return;
     }
-    mDataReader.processFileWithCitiesDistances(distanceFile);
-    mDataReader.processFileWithCitiesCoordinates(positionFile);
+    try {
+        mDataReader.processFileWithCitiesDistances(distanceFile);
+        mDataReader.processFileWithCitiesCoordinates(positionFile);
+    }
+    catch(const char* ex) {
+        QMessageBox msgBox;
+        msgBox.setText(ex);
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.exec();
+        return;
+    }
+    catch(...) {
+        QMessageBox msgBox;
+        msgBox.setText("Unknown error occured!");
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.exec();
+        return;
+    }
     emit cityPositionRead(mDataReader.getCitiesPositions());
+}
+
+void MainWindow::computeRoute()
+{
+    mRouteSolver = new TSPSolver(mDataReader.getDistanceMatrix(), mDataReader.getCityCount());
+    mRouteSolver->generateStartingRoute();
+    QVector<QVector<int> >& roads =  mRouteSolver->getRoute();
+    emit cityRouteComput(roads);
 }
 
 void MainWindow::showWarning(const char* text){

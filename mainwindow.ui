@@ -133,7 +133,7 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QPushButton" name="btn_Compute">
         <property name="enabled">
          <bool>true</bool>
@@ -176,6 +176,13 @@
          </layout>
         </item>
        </layout>
+      </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="btn_LoadInputData">
+        <property name="text">
+         <string>Załaduj pliki</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

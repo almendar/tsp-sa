@@ -3,6 +3,7 @@
 #include <QStack>
 #include <QLinkedList>
 #include <QTime>
+#include <QDebug>
 class TSPSolver
 {
 public:

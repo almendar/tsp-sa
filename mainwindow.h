@@ -6,6 +6,7 @@
 #include <QVector>
 #include "inputread.h"
 #include "draw.h"
+#include "tspsolver.h"
 namespace Ui {
     class MainWindow;
     class Draw;
@@ -21,12 +22,14 @@ public:
 
 signals:
     void cityPositionRead(QVector<CityPosition> cityPositions);
+    void cityRouteComput(QVector<QVector<int> > route);
 
 
 private slots:
     void browseForCoordinatesFile();
     void browseForDistanceFile();
     void computeRoute();
+    void loadDataFiles();
 
 private:
     Ui::MainWindow *ui;
@@ -41,6 +44,7 @@ private:
     int mRoadsCount;
     QVector<CityPosition> mCityPositions;
     InputReader mDataReader;
+    TSPSolver* mRouteSolver;
 
 };
 
