@@ -4,13 +4,35 @@
 #include <iostream>
 #include <QMainWindow>
 #include <QVector>
+#include <QThread>
 #include "inputread.h"
 #include "draw.h"
 #include "tspsolver.h"
+
 namespace Ui {
     class MainWindow;
     class Draw;
 }
+
+class MainWindow;
+
+class ComputeThread : public QThread
+{
+    Q_OBJECT
+
+public:
+    //explicit ComputeThread(QWidget* parent=0);
+    ComputeThread(MainWindow* mw);
+    void run();
+    void setSolver(TSPSolver* solver);
+
+
+
+private:
+    MainWindow* mMainWindow;
+    TSPSolver* mSolver;
+
+};
 
 class MainWindow : public QMainWindow
 {
@@ -45,6 +67,7 @@ private:
     QVector<CityPosition> mCityPositions;
     InputReader mDataReader;
     TSPSolver* mRouteSolver;
+    ComputeThread* mComputeAction;
 
 };
 

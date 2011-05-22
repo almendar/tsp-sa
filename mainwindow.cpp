@@ -14,13 +14,14 @@ MainWindow::MainWindow(QWidget *parent) :
     mRoads = NULL;
     mRouteSolver = 0;
     mRoadsCount = 0;
+
     connect(ui->btn_BrowseCityDistance,SIGNAL(clicked()),SLOT(browseForDistanceFile()));
     connect(ui->btn_BrowseCityPosition,SIGNAL(clicked()),SLOT(browseForCoordinatesFile()));
     connect(ui->btn_Compute,SIGNAL(clicked()),SLOT(computeRoute()));
     connect(ui->btn_LoadInputData,SIGNAL(clicked()),SLOT(loadDataFiles()));
     connect(ui->btn_Compute,SIGNAL(clicked()),SLOT(computeRoute()));
     connect(this,SIGNAL(cityPositionRead(QVector<CityPosition>)),draw,SLOT(setCities(QVector<CityPosition>)));
-    connect(this,SIGNAL(cityRouteComput(QVector<QVector<int> >)),draw,SLOT(setRoute(QVector<QVector<int> >)));
+    //connect(this,SIGNAL(cityRouteComput(QVector<QVector<int> >)),draw,SLOT(setRoute(QVector<QVector<int> >)));
 }
 
 MainWindow::~MainWindow()
@@ -71,10 +72,16 @@ void MainWindow::loadDataFiles() {
 
 void MainWindow::computeRoute()
 {
+    mComputeAction = new ComputeThread(this);
     mRouteSolver = new TSPSolver(mDataReader.getDistanceMatrix(), mDataReader.getCityCount());
-    mRouteSolver->generateStartingRoute();
-    QVector<QVector<int> >& roads =  mRouteSolver->getRoute();
-    emit cityRouteComput(roads);
+    qRegisterMetaType<QVector<QVector<int> > >("QVector<QVector<int> >");
+    connect(mRouteSolver,SIGNAL(newRouteComputed(QVector<QVector<int> >)),draw,SLOT(setRoute(QVector<QVector<int> >)));
+    connect(mRouteSolver,SIGNAL(finalRouteComputed()),draw,SLOT(computationFinished()));
+    mComputeAction->setSolver(mRouteSolver);
+    mComputeAction->start();
+//    mRouteSolver->generateStartingRoute();
+//    QVector<QVector<int> >& roads =  mRouteSolver->getRoute();
+//    emit cityRouteComput(roads);
 }
 
 void MainWindow::showWarning(const char* text){
@@ -157,4 +164,24 @@ void MainWindow::browseForCoordinatesFile()
     QString s = QFileDialog::getOpenFileName(this, "Wybierz plik wspó³rzêdnych", "wspolrzedne.txt");
     this->ui->lineEdit_2->setText(s);
     //processFileWithCoordinates(s);
+}
+
+
+
+ComputeThread::ComputeThread(MainWindow *mw) {
+    mMainWindow = mw;
+}
+
+/*
+void ComputeThread::ComputeThread(QWidget *parent) {
+
+}
+*/
+void ComputeThread::run() {
+    mSolver->generateStartingRoute();
+    mSolver->sendRoute();
+}
+
+void ComputeThread::setSolver(TSPSolver* solver) {
+    mSolver = solver;
 }
