@@ -24,6 +24,9 @@ void Draw::paintEvent(QPaintEvent *event)
     paintRoute();
 }
 
+void Draw::computationFinished(){
+
+}
 
 void Draw::paintCities() {
     QPainter qp(this);

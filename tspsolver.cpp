@@ -1,10 +1,13 @@
 #include "tspsolver.h"
 #include <QtCore/qmath.h>
 
+
+
 TSPSolver::TSPSolver(QVector<QVector<int> >& adjacencyMatrix,
                      int nrOfCities, float initTemperature):
 mAdjacencyMatrix(adjacencyMatrix), mNrOfCities(nrOfCities), mInitTemperature(initTemperature)
 {
+    //QObject::QObject(0);
     mVisitedNodes.resize(nrOfCities);
     for(int i=0; i < nrOfCities;i++) {mVisitedNodes[i] = false;};
     mRoute.resize(nrOfCities);
@@ -48,6 +51,7 @@ void TSPSolver::generateStartingRoute() {
         }
     }
     findWayBackToStart(startVertexNr,currentVertexNr);
+
 }
 
 /**
@@ -117,10 +121,7 @@ int TSPSolver::findNearestUnexploredVertex(const int& vertexNr) {
             //dead end, remove from the stack
 
             route.pop();
-            if(route.isEmpty()) {
-                //pass
-                int a = 3;
-            }
+
             //go back to previous vertex and start again
             currentVertex = route.top();
             /*this should only happen if we have already been at this
@@ -292,3 +293,7 @@ int TSPSolver::routeLength(QVector<QVector<int> > &adjacencyMatrix, QVector< QVe
     return sum;
 }
 
+void TSPSolver::sendRoute(){
+    QVector<QVector<int> >& route =  getRoute();
+    emit newRouteComputed(route);
+}
