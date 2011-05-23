@@ -4,8 +4,8 @@
 
 
 TSPSolver::TSPSolver(QVector<QVector<int> >& adjacencyMatrix,
-                     int nrOfCities, float initTemperature):
-mAdjacencyMatrix(adjacencyMatrix), mNrOfCities(nrOfCities), mInitTemperature(initTemperature)
+                     int nrOfCities, float initTemperature, float temperatureStep):
+mAdjacencyMatrix(adjacencyMatrix), mNrOfCities(nrOfCities), mInitTemperature(initTemperature), mTemperatureStep(temperatureStep)
 {
     //QObject::QObject(0);
     mVisitedNodes.resize(nrOfCities);
@@ -278,7 +278,6 @@ void TSPSolver::startSimulatedAnnealing(){
     int bestLength = routeLength(mAdjacencyMatrix, mRoute);
     int actualLength = routeLength(mAdjacencyMatrix, actualRoute);
     float actualTemperature = mInitTemperature;
-    actualTemperature = 10.0;
     while(actualTemperature>0.0){
         QVector< QVector<int> > newRoute = twoOpt(actualRoute);
         int newLength = routeLength(mAdjacencyMatrix, newRoute);
@@ -299,8 +298,9 @@ void TSPSolver::startSimulatedAnnealing(){
             }
         }
         // wys³aæ aktualn¹ trasê
-        actualTemperature-=1.0;
+        actualTemperature -= mTemperatureStep;
         mRoute = actualRoute;
+        emit newRouteComputed(mRoute);
     }
     // wys³aæ najlepsz¹ trasê
     mRoute = bestRoute;
