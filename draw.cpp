@@ -24,7 +24,7 @@ void Draw::paintEvent(QPaintEvent *event)
     paintRoute();
 }
 
-void Draw::computationFinished(){
+void Draw::computationFinished(int value){
 
 }
 
@@ -88,6 +88,8 @@ Draw::~Draw()
 void Draw::setCities(QVector<CityPosition> cityPositions) {
     mCityPositions = cityPositions;
     mScaledCityPositions.resize(mCityPositions.size());
+    mXMax=INT_MIN;
+    mYMax=INT_MIN;
     for(int i=0; i < cityPositions.size();i++) {
         if(cityPositions[i].x > mXMax)
             mXMax = cityPositions[i].x;

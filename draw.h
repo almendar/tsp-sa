@@ -27,7 +27,7 @@ signals:
 public slots:
     void setCities(QVector<CityPosition> cityPositions);
     void setRoute(QVector<QVector<int> > routes);
-    void computationFinished();
+    void computationFinished(int);
 
 
 private:

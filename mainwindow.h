@@ -52,6 +52,7 @@ private slots:
     void browseForDistanceFile();
     void computeRoute();
     void loadDataFiles();
+    void computationFinished(int);
 
 private:
     Ui::MainWindow *ui;
