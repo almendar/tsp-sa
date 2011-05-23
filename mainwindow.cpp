@@ -73,7 +73,7 @@ void MainWindow::loadDataFiles() {
 void MainWindow::computeRoute()
 {
     mComputeAction = new ComputeThread(this);
-    mRouteSolver = new TSPSolver(mDataReader.getDistanceMatrix(), mDataReader.getCityCount());
+    mRouteSolver = new TSPSolver(mDataReader.getDistanceMatrix(), mDataReader.getCityCount(), this->ui->doubleSpinBox_2->value(), this->ui->doubleSpinBox->value());
     qRegisterMetaType<QVector<QVector<int> > >("QVector<QVector<int> >");
     connect(mRouteSolver,SIGNAL(newRouteComputed(QVector<QVector<int> >)),draw,SLOT(setRoute(QVector<QVector<int> >)));
     connect(mRouteSolver,SIGNAL(finalRouteComputed()),draw,SLOT(computationFinished()));
@@ -179,6 +179,7 @@ void ComputeThread::ComputeThread(QWidget *parent) {
 */
 void ComputeThread::run() {
     mSolver->generateStartingRoute();
+    mSolver->startSimulatedAnnealing();
     mSolver->sendRoute();
 }
 
