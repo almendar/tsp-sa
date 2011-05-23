@@ -310,7 +310,16 @@ int TSPSolver::routeLength(QVector<QVector<int> > &adjacencyMatrix, QVector< QVe
     int sum = 0;
     for(int i=0;i<route.size();i++){
         for(int j=0;j<route[i].size();j++){
-            sum += adjacencyMatrix[i][route[i][j]];
+            int val = adjacencyMatrix[i][route[i][j]];
+
+            if(val==0){
+//                val=1000000;  // jeœli zliczaæ ka¿de wyst¹pienie braku drogi
+                i=route.size(); // jeœli uznaæ, ¿e ka¿dy brak drogi jest tak samo z³y
+                sum=2000000000;
+                break;
+            }
+
+            sum += val;
         }
     }
     return sum;
