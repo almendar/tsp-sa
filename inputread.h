@@ -5,6 +5,7 @@
 #include <QIODevice>
 #include <QVector>
 #include <QPoint>
+#include <QTime>
 class CityPosition{
 public:
     int x;
@@ -23,6 +24,7 @@ public:
     InputReader();
     void processFileWithCitiesDistances(QString fileName);
     void processFileWithCitiesCoordinates(QString fileName);
+    void generateCoordinates();
     QVector<QVector<int> >& getDistanceMatrix() { return mDistanceMatrix;};
     int getCityCount() {return mCityCountInRow;};
     QVector<CityPosition> getCitiesPositions() {return mCitiesCoordinates;};

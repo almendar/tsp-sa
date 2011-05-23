@@ -5,6 +5,8 @@
 #include <QTime>
 #include <QDebug>
 #include <QVector>
+#include <QtCore/qmath.h>
+#include <QMainWindow>
 class TSPSolver : public QObject
 {
     Q_OBJECT
@@ -21,7 +23,7 @@ public:
 
 signals:
     void newRouteComputed(QVector<QVector<int> >);
-    void finalRouteComputed();
+    void finalRouteComputed(int);
 
 private:
     int mRandomStartPoint;

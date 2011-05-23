@@ -1,5 +1,4 @@
 #include "tspsolver.h"
-#include <QtCore/qmath.h>
 
 
 
@@ -304,6 +303,7 @@ void TSPSolver::startSimulatedAnnealing(){
     }
     // wys³aæ najlepsz¹ trasê
     mRoute = bestRoute;
+    emit finalRouteComputed(routeLength(mAdjacencyMatrix, mRoute));
 }
 
 int TSPSolver::routeLength(QVector<QVector<int> > &adjacencyMatrix, QVector< QVector<int> > &route){

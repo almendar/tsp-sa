@@ -28,8 +28,10 @@ void InputReader::processFileWithCitiesCoordinates(QString fileName)
         line = line.trimmed();
         QList<QByteArray> lista = line.split(' ');
         if(lista.size()==2){
-            mCitiesCoordinates[i].x = (lista[0].trimmed()).toInt();
-            mCitiesCoordinates[i].y = (lista[1].trimmed()).toInt();
+            if(i<mCityCountInColumn){
+                mCitiesCoordinates[i].x = (lista[0].trimmed()).toInt();
+                mCitiesCoordinates[i].y = (lista[1].trimmed()).toInt();
+            }
             i++;
         }
         else{
@@ -75,7 +77,10 @@ void InputReader::processFileWithCitiesDistances(QString fileName) {
         else {
             //check if cityCount is the same
             if(mCityCountInRow != singleRow.size()) {
-                throw -1;
+//                throw -1;
+                mCityCountInRow = singleRow.size();
+                initializeDistanceMatrix();
+                mCitiesCoordinates.clear();
             }
         }
         for(int i=0;i<mCityCountInRow;i++)
@@ -83,4 +88,18 @@ void InputReader::processFileWithCitiesDistances(QString fileName) {
         mCityCountInColumn++;
     }
     this->validateDistanceMatrix();
+}
+
+void InputReader::generateCoordinates(){
+    if(mCityCountInColumn==0){
+        throw -1;
+    }
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
+
+    mCitiesCoordinates.resize(mCityCountInColumn);
+    for(int i=0;i<mCityCountInColumn;i++){
+        mCitiesCoordinates[i].x = qrand()%500;
+        mCitiesCoordinates[i].y = qrand()%400;
+    }
 }
