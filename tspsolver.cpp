@@ -210,42 +210,63 @@ QVector< QVector<int> > TSPSolver::twoOpt(QVector< QVector<int> > route){
 
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
-    int firstSegment = (qrand() % segmentsCount);
-    int secondSegment = (qrand() % (segmentsCount-1));
-    if(secondSegment >= firstSegment)
-        secondSegment++;
 
-    int x1=0, x2=0, y1=0, y2=0;
-    int fS = firstSegment, sS = secondSegment;
-    bool ready1 = false, ready2=false;
-    int i=0;
-    while(!ready1 || !ready2){
-        if(!ready1){
-            if(route[i].size() <= fS){
-                fS -= route[i].size();
-                x1++;
-            }else{
-                y1=fS;
-                ready1 = true;
-            }
-        }
-        if(!ready2){
-            if(route[i].size() <= sS){
-                sS -= route[i].size();
-                x2++;
-            }else{
-                y2=sS;
-                ready2 = true;
-            }
-        }
-        i++;
+    QVector<int> path;
+    path.append(mRandomStartPoint);
+    int actCity = mRandomStartPoint;
+    int y[route.size()];
+    for(int i=0;i<route.size();i++)
+         y[i]=0;
+    for(int i=1;i<segmentsCount+1;i++){
+        y[actCity]++;
+        actCity=route[actCity][y[actCity]-1];
+        path.append(actCity);
     }
 
-    int temp = route[x2][y2];
-    route[x2][y2]=route[x1][y1];
-    route[x1][y1]=temp;
+    int s1,s2; //starts of segments
+    s1 = (qrand() % segmentsCount);
+    s2 = (qrand() % (segmentsCount-3));
+    if(s1==0)
+        s2+=2;
+    else if(s1==1)
+        s2+=3;
+    else if(s1>1){
+        if(s1==segmentsCount-1)
+            s2+=1;
+        else if(s1<segmentsCount-1 && s2>=s1-1)
+            s2+=3;
+    }
 
-    return route;
+    if(s2<s1){ // 1 ma byæ mniejszy ni¿ 2
+        int temp = s2;
+        s2 = s1;
+        s1 = temp;
+    }
+
+    s1+=1; // interesuje nas koniec 1 odcinka
+    int temp = path[s1];
+    path[s1] = path[s2];
+    path[s2] = temp;
+
+    // wyrzucenie powtórzeñ miast, optymalizacja
+    for(int i=0;i<path.size()-2;i++){
+        if(path[i]==path[i+1]){
+            for(int j=i+1;j<path.size()-1;j++){
+                path[j]=path[j+1];
+            }
+            path.remove(path.size()-1,1);
+        }
+    }
+
+    // powrót do poprzedniej reprezentacji
+    QVector< QVector<int> > result;
+    for(int i=0;i<route.size();i++)
+        result.append(QVector<int>());
+    for(int i=1;i<path.size();i++){
+        result[path[i-1]].append(path[i]);
+    }
+
+    return result;
 }
 
 void TSPSolver::startSimulatedAnnealing(){
@@ -279,8 +300,10 @@ void TSPSolver::startSimulatedAnnealing(){
         }
         // wys³aæ aktualn¹ trasê
         actualTemperature-=1.0;
+        mRoute = actualRoute;
     }
     // wys³aæ najlepsz¹ trasê
+    mRoute = bestRoute;
 }
 
 int TSPSolver::routeLength(QVector<QVector<int> > &adjacencyMatrix, QVector< QVector<int> > &route){
