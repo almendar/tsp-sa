@@ -209,7 +209,11 @@ void TSPSolver::findWayBackToStart(int startOfTheRoute, int lastVisitedNode) {
     }
 }
 
+/**
+  Implementation of 2-opt alghoritm.
+*/
 QVector< QVector<int> > TSPSolver::twoOpt(QVector< QVector<int> > route){
+    // count number of edges
     int segmentsCount = 0;
     for(int i=0; i<route.size(); i++)
         segmentsCount += route[i].size();
@@ -217,6 +221,7 @@ QVector< QVector<int> > TSPSolver::twoOpt(QVector< QVector<int> > route){
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
 
+    // transform path to simple representation
     QVector<int> path;
     path.append(mRandomStartPoint);
     int actCity = mRandomStartPoint;
@@ -229,6 +234,7 @@ QVector< QVector<int> > TSPSolver::twoOpt(QVector< QVector<int> > route){
         path.append(actCity);
     }
 
+    // random edges to swap
     int s1,s2; //starts of segments
     s1 = (qrand() % segmentsCount);
     s2 = (qrand() % (segmentsCount-3));
@@ -243,18 +249,18 @@ QVector< QVector<int> > TSPSolver::twoOpt(QVector< QVector<int> > route){
             s2+=3;
     }
 
-    if(s2<s1){ // 1 ma byæ mniejszy ni¿ 2
+    if(s2<s1){ // 1 must be smaller than 2
         int temp = s2;
         s2 = s1;
         s1 = temp;
     }
 
-    s1+=1; // interesuje nas koniec 1 odcinka
+    s1+=1; // moving to the end of 1 edge
     int temp = path[s1];
     path[s1] = path[s2];
     path[s2] = temp;
 
-    // wyrzucenie powtórzeñ miast, optymalizacja
+    // clean cities doubles, simple optimization
     for(int i=0;i<path.size()-2;i++){
         if(path[i]==path[i+1]){
             for(int j=i+1;j<path.size()-1;j++){
@@ -264,7 +270,7 @@ QVector< QVector<int> > TSPSolver::twoOpt(QVector< QVector<int> > route){
         }
     }
 
-    // powrót do poprzedniej reprezentacji
+    // transforming to main representation
     QVector< QVector<int> > result;
     for(int i=0;i<route.size();i++)
         result.append(QVector<int>());
@@ -275,10 +281,14 @@ QVector< QVector<int> > TSPSolver::twoOpt(QVector< QVector<int> > route){
     return result;
 }
 
+/**
+  Alghoritm of simulated annealing. All options are stored in object, so nothing is passed to function.
+*/
 void TSPSolver::startSimulatedAnnealing(){
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
 
+    // case of empty route means that there is no route at all
     if(mRoute.isEmpty()){
         emit generatingRouteError();
         return;
@@ -317,9 +327,13 @@ void TSPSolver::startSimulatedAnnealing(){
     }
     // wys³aæ najlepsz¹ trasê
     mRoute = bestRoute;
+    emit newRouteComputed(mRoute);
     emit finalRouteComputed(routeLength(mAdjacencyMatrix, mRoute));
 }
 
+/**
+  Return length of given route.
+*/
 int TSPSolver::routeLength(QVector<QVector<int> > &adjacencyMatrix, QVector< QVector<int> > &route){
     int sum = 0;
     for(int i=0;i<route.size();i++){
@@ -327,8 +341,8 @@ int TSPSolver::routeLength(QVector<QVector<int> > &adjacencyMatrix, QVector< QVe
             int val = adjacencyMatrix[i][route[i][j]];
 
             if(val==0){
-//                val=1000000;  // jeœli zliczaæ ka¿de wyst¹pienie braku drogi
-                i=route.size(); // jeœli uznaæ, ¿e ka¿dy brak drogi jest tak samo z³y
+//                val=1000000;  // in case of counting every lack of edge
+                i=route.size(); // in case that any lack is same wrong
                 sum=2000000000;
                 break;
             }
