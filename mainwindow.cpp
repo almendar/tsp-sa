@@ -31,7 +31,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::browseForDistanceFile()
 {
-    QString s = QFileDialog::getOpenFileName(this, "Wybierz plik", "wejscie.txt");
+    QString s = QFileDialog::getOpenFileName(this, "Choose file", "input.txt");
     this->ui->lineEdit->setText(s);
 }
 
@@ -94,7 +94,7 @@ void MainWindow::showWarning(const char* text){
 
 void MainWindow::browseForCoordinatesFile()
 {
-    QString s = QFileDialog::getOpenFileName(this, "Wybierz plik wspó³rzêdnych", "wspolrzedne.txt");
+    QString s = QFileDialog::getOpenFileName(this, "Choose positions file", "positions.txt");
     this->ui->lineEdit_2->setText(s);
 }
 
@@ -104,7 +104,7 @@ void MainWindow::computationFinished(int value){
 
 void MainWindow::generatingRouteError(){
     QMessageBox msg(this);
-    msg.setText("Nie uda³o siê wygenerowaæ œcie¿ki!");
+    msg.setText("Path could not be generated!");
     msg.setIcon(QMessageBox::Warning);
     msg.exec();
 }
@@ -113,15 +113,9 @@ ComputeThread::ComputeThread(MainWindow *mw) {
     mMainWindow = mw;
 }
 
-/*
-void ComputeThread::ComputeThread(QWidget *parent) {
-
-}
-*/
 void ComputeThread::run() {
     mSolver->generateStartingRoute();
     mSolver->startSimulatedAnnealing();
-//    mSolver->sendRoute();
 }
 
 void ComputeThread::setSolver(TSPSolver* solver) {
