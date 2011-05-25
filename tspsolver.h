@@ -13,7 +13,7 @@ class TSPSolver : public QObject
 public:
 
     TSPSolver(QVector<QVector<int> >& adjastancyMatrix, int nrOfCities,
-              float initTemperature=0.5, float temperatureStep=0.1);
+              float initTemperature=0.5, float temperatureStep=0.1, float minTemperature=0.01, float mInsideLoop=1.0);
     ~TSPSolver();
     void generateStartingRoute();
     QVector< QVector<int> > twoOpt(QVector< QVector<int> > route);
@@ -24,6 +24,7 @@ public:
 signals:
     void newRouteComputed(QVector<QVector<int> >);
     void finalRouteComputed(int);
+    void generatingRouteError();
 
 private:
     int mRandomStartPoint;
@@ -35,6 +36,8 @@ private:
     int mNrOfCities;
     float mInitTemperature;
     float mTemperatureStep;
+    float mMinTemperature;
+    float mInsideLoop;
     QVector<bool> mVisitedNodes;
     QVector< QVector<int> > mRoute;
 

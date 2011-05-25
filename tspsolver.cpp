@@ -3,8 +3,8 @@
 
 
 TSPSolver::TSPSolver(QVector<QVector<int> >& adjacencyMatrix,
-                     int nrOfCities, float initTemperature, float temperatureStep):
-mAdjacencyMatrix(adjacencyMatrix), mNrOfCities(nrOfCities), mInitTemperature(initTemperature), mTemperatureStep(temperatureStep)
+                     int nrOfCities, float initTemperature, float temperatureStep, float minTemperature, float insideLoop):
+mAdjacencyMatrix(adjacencyMatrix), mNrOfCities(nrOfCities), mInitTemperature(initTemperature), mTemperatureStep(temperatureStep), mMinTemperature(minTemperature), mInsideLoop(insideLoop)
 {
     //QObject::QObject(0);
     mVisitedNodes.resize(nrOfCities);
@@ -32,6 +32,10 @@ void TSPSolver::generateStartingRoute() {
             if(notVisitedVerticesNumber>1) {
                 mVisitedNodes[currentVertexNr] = true;
                 int unexplored = findNearestUnexploredVertex(currentVertexNr);
+                if(unexplored==-1){
+                    mRoute.clear();
+                    return;
+                }
                 currentVertexNr = unexplored;
                 --notVisitedVerticesNumber;
             }
@@ -121,6 +125,9 @@ int TSPSolver::findNearestUnexploredVertex(const int& vertexNr) {
 
             route.pop();
 
+            if(route.size()==0){
+                return -1;
+            }
             //go back to previous vertex and start again
             currentVertex = route.top();
             /*this should only happen if we have already been at this
@@ -272,32 +279,39 @@ void TSPSolver::startSimulatedAnnealing(){
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
 
+    if(mRoute.isEmpty()){
+        emit generatingRouteError();
+        return;
+    }
+
     QVector< QVector<int> > bestRoute = mRoute;
     QVector< QVector<int> > actualRoute = mRoute;
     int bestLength = routeLength(mAdjacencyMatrix, mRoute);
     int actualLength = routeLength(mAdjacencyMatrix, actualRoute);
     float actualTemperature = mInitTemperature;
-    while(actualTemperature>0.0){
-        QVector< QVector<int> > newRoute = twoOpt(actualRoute);
-        int newLength = routeLength(mAdjacencyMatrix, newRoute);
-        if(newLength<=actualLength){
-            actualRoute = newRoute;
-            actualLength = routeLength(mAdjacencyMatrix, actualRoute);
-            if(actualLength<bestLength){
-                bestRoute = actualRoute;
-                bestLength = routeLength(mAdjacencyMatrix, mRoute);
-            }
-        }else{
-            int rand = qrand();
-            double drand = rand/ (static_cast<double>(RAND_MAX));
-            double expw = (newLength-actualLength)*actualTemperature;
-            double exp = qExp(expw);
-            if(drand<exp){
+    while(actualTemperature>mMinTemperature){
+        for(int i=0;i<mInsideLoop;i++){
+            QVector< QVector<int> > newRoute = twoOpt(actualRoute);
+            int newLength = routeLength(mAdjacencyMatrix, newRoute);
+            if(newLength<=actualLength){
                 actualRoute = newRoute;
+                actualLength = routeLength(mAdjacencyMatrix, actualRoute);
+                if(actualLength<bestLength){
+                    bestRoute = actualRoute;
+                    bestLength = routeLength(mAdjacencyMatrix, mRoute);
+                }
+            }else{
+                int rand = qrand();
+                double drand = rand/ (static_cast<double>(RAND_MAX));
+                double expw = (newLength-actualLength)*actualTemperature;
+                double exp = qExp(expw);
+                if(drand<exp){
+                    actualRoute = newRoute;
+                }
             }
         }
         // wys³aæ aktualn¹ trasê
-        actualTemperature -= mTemperatureStep;
+        actualTemperature *= mTemperatureStep;
         mRoute = actualRoute;
         emit newRouteComputed(mRoute);
     }
