@@ -53,6 +53,7 @@ private slots:
     void computeRoute();
     void loadDataFiles();
     void computationFinished(int);
+    void generatingRouteError();
 
 private:
     Ui::MainWindow *ui;
