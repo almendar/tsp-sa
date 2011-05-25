@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btn_BrowseCityPosition,SIGNAL(clicked()),SLOT(browseForCoordinatesFile()));
     connect(ui->btn_Compute,SIGNAL(clicked()),SLOT(computeRoute()));
     connect(ui->btn_LoadInputData,SIGNAL(clicked()),SLOT(loadDataFiles()));
-    connect(ui->btn_Compute,SIGNAL(clicked()),SLOT(computeRoute()));
     connect(this,SIGNAL(cityPositionRead(QVector<CityPosition>)),draw,SLOT(setCities(QVector<CityPosition>)));
 }
 
