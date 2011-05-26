@@ -145,19 +145,19 @@
              </sizepolicy>
             </property>
             <property name="decimals">
-             <number>4</number>
+             <number>3</number>
             </property>
             <property name="minimum">
-             <double>0.000100000000000</double>
+             <double>0.001000000000000</double>
             </property>
             <property name="maximum">
-             <double>10.000000000000000</double>
+             <double>1.000000000000000</double>
             </property>
             <property name="singleStep">
-             <double>0.100000000000000</double>
+             <double>0.001000000000000</double>
             </property>
             <property name="value">
-             <double>0.500000000000000</double>
+             <double>0.950000000000000</double>
             </property>
            </widget>
           </item>
@@ -174,11 +174,20 @@
           </item>
           <item>
            <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>0.001000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
             <property name="singleStep">
-             <double>0.250000000000000</double>
+             <double>0.001000000000000</double>
             </property>
             <property name="value">
-             <double>1.000000000000000</double>
+             <double>0.001000000000000</double>
             </property>
            </widget>
           </item>
@@ -205,7 +214,7 @@
              <double>100.000000000000000</double>
             </property>
             <property name="value">
-             <double>10.000000000000000</double>
+             <double>25.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -230,6 +239,9 @@
             </property>
             <property name="maximum">
              <double>10000.000000000000000</double>
+            </property>
+            <property name="value">
+             <double>100.000000000000000</double>
             </property>
            </widget>
           </item>

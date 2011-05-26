@@ -1,0 +1,9 @@
+ - Dopisz opis swoich algorytmów 2-opt i anneling
+ - SprawdŸ czy nie powinno siê dzieliæ jednak przez temperaturê. 48 strona w tym pdf pokazuje, ¿e trzeba dzieliæ.
+ - Ostatni rozdzia³ jest Twój - analiza dzia³ania, mo¿e czasów?
+	Skoro nam nie wychodzi, ¿e du¿a liczba powtórzeñ daje du¿o lepsze wyniki ni¿ wygenerowanie trasy 
+	pocz¹tkowej metod¹ zach³ann¹ to mo¿e postawiæ tezê, ¿e jest wiêksze prawdopodobieñstwo, ¿e uda siê
+	trafiæ na podobnie ma³¹ wartoœæ i wahania bêd¹ mniejsze pomiêdzy kolejnymi próbami ni¿ przy zach³annym.
+
+ - Przeczytaj ca³oœæ przed wys³aniem :)
+ - Pamiêtaj, ¿e chcia³ te¿ mieæ kod Ÿród³owy, wiêc go do³¹cz jako za³¹cznik.
