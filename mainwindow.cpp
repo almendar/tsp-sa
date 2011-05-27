@@ -78,8 +78,8 @@ void MainWindow::computeRoute()
     mRouteSolver = new TSPSolver(mDataReader.getDistanceMatrix(), mDataReader.getCityCount(), this->ui->doubleSpinBox_2->value(), this->ui->doubleSpinBox->value(), this->ui->doubleSpinBox_3->value(), this->ui->doubleSpinBox_4->value());
     qRegisterMetaType<QVector<QVector<int> > >("QVector<QVector<int> >");
     connect(mRouteSolver,SIGNAL(newRouteComputed(QVector<QVector<int> >)),draw,SLOT(setRoute(QVector<QVector<int> >)));
-    connect(mRouteSolver,SIGNAL(finalRouteComputed(int)),draw,SLOT(computationFinished(int)));
-    connect(mRouteSolver,SIGNAL(finalRouteComputed(int)),this,SLOT(computationFinished(int)));
+    connect(mRouteSolver,SIGNAL(finalRouteComputed(float)),draw,SLOT(computationFinished(float)));
+    connect(mRouteSolver,SIGNAL(finalRouteComputed(float)),this,SLOT(computationFinished(float)));
     connect(mRouteSolver,SIGNAL(generatingRouteError()),this,SLOT(generatingRouteError()));
     mComputeAction->setSolver(mRouteSolver);
     mComputeAction->start();
@@ -98,7 +98,7 @@ void MainWindow::browseForCoordinatesFile()
     this->ui->lineEdit_2->setText(s);
 }
 
-void MainWindow::computationFinished(int value){
+void MainWindow::computationFinished(float value){
     this->ui->lineEdit_3->setText(QString::number(value));
 }
 

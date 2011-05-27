@@ -84,7 +84,7 @@ void InputReader::processFileWithCitiesDistances(QString fileName) {
             }
         }
         for(int i=0;i<mCityCountInRow;i++)
-            mDistanceMatrix[mCityCountInColumn][i]=(singleRow[i].trimmed()).toInt();
+            mDistanceMatrix[mCityCountInColumn][i]=(singleRow[i].trimmed()).toFloat();
         mCityCountInColumn++;
     }
     this->validateDistanceMatrix();

@@ -24,7 +24,7 @@ void Draw::paintEvent(QPaintEvent *event)
     paintRoute();
 }
 
-void Draw::computationFinished(int value){
+void Draw::computationFinished(float value){
 
 }
 
