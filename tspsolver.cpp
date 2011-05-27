@@ -2,7 +2,7 @@
 
 
 
-TSPSolver::TSPSolver(QVector<QVector<int> >& adjacencyMatrix,
+TSPSolver::TSPSolver(QVector<QVector<float> >& adjacencyMatrix,
                      int nrOfCities, float initTemperature, float temperatureStep, float minTemperature, float insideLoop):
 mAdjacencyMatrix(adjacencyMatrix), mNrOfCities(nrOfCities), mInitTemperature(initTemperature), mTemperatureStep(temperatureStep), mMinTemperature(minTemperature), mInsideLoop(insideLoop)
 {
@@ -65,7 +65,7 @@ void TSPSolver::generateStartingRoute() {
 
   */
 int TSPSolver::findNearestNeighbour(const int& vertexNr) {
-    QVector<int>& currentVertexNeighboursArray = mAdjacencyMatrix[vertexNr];
+    QVector<float>& currentVertexNeighboursArray = mAdjacencyMatrix[vertexNr];
     int tmpNearestNeighbourBestDistance = -1;
     int tmpBestNeighbourNumber = -1;
     for(int i=0; i < mNrOfCities; i++) {
@@ -95,7 +95,7 @@ int TSPSolver::findNearestUnexploredVertex(const int& vertexNr) {
     route.push(currentVertex);
     bool stopSearch = false;
     while(true) {
-        QVector<int>& neighboursRow = mAdjacencyMatrix[currentVertex];
+        QVector<float>& neighboursRow = mAdjacencyMatrix[currentVertex];
         if(!visited[currentVertex]) {
             for(int k=0;k<mNrOfCities;k++) {
                 //if we found unvisited node in TSP, we can stop searching
@@ -165,7 +165,7 @@ void TSPSolver::findWayBackToStart(int startOfTheRoute, int lastVisitedNode) {
     int currentVertex = lastVisitedNode;
     route.push(currentVertex);
     while(true) {
-        QVector<int>& neighboursRow = mAdjacencyMatrix[currentVertex];
+        QVector<float>& neighboursRow = mAdjacencyMatrix[currentVertex];
         if(!visited[currentVertex]) {
             for(int k=0;k<mNrOfCities;k++) {
                 if(!visited[k] && neighboursRow[k] > 0) {
@@ -296,13 +296,13 @@ void TSPSolver::startSimulatedAnnealing(){
 
     QVector< QVector<int> > bestRoute = mRoute;
     QVector< QVector<int> > actualRoute = mRoute;
-    int bestLength = routeLength(mAdjacencyMatrix, mRoute);
-    int actualLength = routeLength(mAdjacencyMatrix, actualRoute);
+    float bestLength = routeLength(mAdjacencyMatrix, mRoute);
+    float actualLength = routeLength(mAdjacencyMatrix, actualRoute);
     float actualTemperature = mInitTemperature;
-    while(actualTemperature>mMinTemperature){
+    while(actualTemperature > mMinTemperature){
         for(int i=0;i<mInsideLoop;i++){
             QVector< QVector<int> > newRoute = twoOpt(actualRoute);
-            int newLength = routeLength(mAdjacencyMatrix, newRoute);
+            float newLength = routeLength(mAdjacencyMatrix, newRoute);
             if(newLength<=actualLength){
                 actualRoute = newRoute;
                 actualLength = routeLength(mAdjacencyMatrix, actualRoute);
@@ -313,7 +313,7 @@ void TSPSolver::startSimulatedAnnealing(){
             }else{
                 int rand = qrand();
                 double drand = rand/ (static_cast<double>(RAND_MAX));
-                double expw = (newLength-actualLength)*actualTemperature;
+                double expw = float((newLength-actualLength))/actualTemperature;
                 double exp = qExp(expw);
                 if(drand<exp){
                     actualRoute = newRoute;
@@ -334,11 +334,11 @@ void TSPSolver::startSimulatedAnnealing(){
 /**
   Return length of given route.
 */
-int TSPSolver::routeLength(QVector<QVector<int> > &adjacencyMatrix, QVector< QVector<int> > &route){
-    int sum = 0;
+float TSPSolver::routeLength(QVector<QVector<float> > &adjacencyMatrix, QVector< QVector<int> > &route){
+    float sum = 0;
     for(int i=0;i<route.size();i++){
         for(int j=0;j<route[i].size();j++){
-            int val = adjacencyMatrix[i][route[i][j]];
+            float val = adjacencyMatrix[i][route[i][j]];
 
             if(val==0){
 //                val=1000000;  // in case of counting every lack of edge

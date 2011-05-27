@@ -25,7 +25,7 @@ public:
     void processFileWithCitiesDistances(QString fileName);
     void processFileWithCitiesCoordinates(QString fileName);
     void generateCoordinates();
-    QVector<QVector<int> >& getDistanceMatrix() { return mDistanceMatrix;};
+    QVector<QVector<float> >& getDistanceMatrix() { return mDistanceMatrix;};
     int getCityCount() {return mCityCountInRow;};
     QVector<CityPosition> getCitiesPositions() {return mCitiesCoordinates;};
 
@@ -34,7 +34,7 @@ private:
     bool mIsDistanceMatrixCreated;
     int mCityCountInRow;
     int mCityCountInColumn;
-    QVector<QVector<int> > mDistanceMatrix;
+    QVector<QVector<float> > mDistanceMatrix;
     QVector<CityPosition> mCitiesCoordinates;
 
     //Methods

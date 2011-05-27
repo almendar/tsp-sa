@@ -52,7 +52,7 @@ private slots:
     void browseForDistanceFile();
     void computeRoute();
     void loadDataFiles();
-    void computationFinished(int);
+    void computationFinished(float);
     void generatingRouteError();
 
 private:
